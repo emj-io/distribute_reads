@@ -8,6 +8,7 @@ module DistributeReads
   class Error < StandardError; end
   class TooMuchLag < Error; end
   class NoReplicasAvailable < Error; end
+  class WritesNotAllowed < Error; end
 
   class << self
     attr_accessor :by_default
@@ -15,6 +16,7 @@ module DistributeReads
   end
   self.by_default = false
   self.default_options = {
+    allow_writes: true,
     failover: true,
     lag_failover: false
   }

@@ -199,6 +199,31 @@ class DistributeReadsTest < Minitest::Test
     end
   end
 
+  def test_default_options_allow_writes_false
+    with_default_options(allow_writes: false) do
+      assert_raises DistributeReads::WritesNotAllowed do
+        distribute_reads { insert_value }
+      end
+    end
+  end
+
+  def test_allow_writes_false
+    assert_raises DistributeReads::WritesNotAllowed do
+      distribute_reads(allow_writes: false) { insert_value }
+    end
+  end
+
+  def test_allow_writes_false_with_by_default
+    by_default do
+      assert_replica
+      assert_raises DistributeReads::WritesNotAllowed do
+        distribute_reads(allow_writes: false) do
+          insert_value
+        end
+      end
+    end
+  end
+
   private
 
   def by_default
